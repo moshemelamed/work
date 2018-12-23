@@ -1,0 +1,25 @@
+{
+  "name": "powhere_sniffer",
+  "version": "0.0.1",
+  "main": "main.js",
+  "author": "Dror Galron",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "all": "0.0.0",
+    "aws-sdk": "^2.355.0",
+    "eslint": "^5.9.0",
+    "fs": "latest",
+    "hashmap": "^2.3.0",
+    "moment": "latest",
+    "mysql": "latest",
+    "os": "latest",
+    "request": "latest",
+    "semaphore": "^1.1.0"
+  },
+  "scripts": {
+    "start": "node main.js"
+  },
+  "devDependencies": {},
+  "description": ""
+}

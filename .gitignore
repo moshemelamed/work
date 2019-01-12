@@ -21,3 +21,11 @@ $RECYCLE.BIN/
 # =========================
 # Operating System Files
 # =========================
+
+
+# =========================
+# Local
+# =========================
+bower_components
+node_modules
+.idea

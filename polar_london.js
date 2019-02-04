@@ -18,7 +18,7 @@ function isModified(oldEntry, newEntry){
     }
     return IsModified;
 }
-function convert2dynamoformat(entry){
+function convert2mongoformat(entry){
     
     var name = (entry.name)?entry.name : "None";
     var cost = (entry.cost)?entry.cost : "None";
@@ -33,21 +33,21 @@ function convert2dynamoformat(entry){
     var status = (entry.status)?entry.status : "None";
     
     var item = {
-        "oid": {S: entry.oid},
-        "created_at": {N: entry.created_at.toString()},
-        "id": {S: entry.id},
-        "siteid": {S: entry.siteid},
-        "address": {S: address},
-        "city": {S: city},
-        "lat": {N: lat},
-        "lng": {N: lng},
-        "type": {S: type},
-        "name": {S: name},
-        "cost": {N: cost.toString()},
-        "kw": {N: kw.toString()},
-        "rating": {S: rating},
-        "text": {S: text},
-        "status": {S: status}
+        oid: entry.oid.toString(),
+        created_at: entry.created_at.toString(),
+        id: entry.id.toString(),
+        siteid: entry.siteid.toString(),
+        address: address.toString(),
+        city: city.toString(),
+        lat: lat.toString(),
+        lng: lng.toString(),
+        type: type.toString(),
+        name: name.toString(),
+        cost: cost.toString(),
+        kw: kw.toString(),
+        rating:  rating.toString(),
+        text: text.toString(),
+        status: status.toString()
     }
     return item;
 }
@@ -217,7 +217,7 @@ async function UpdateModifiedEntries(body){
     var num3 = 0;
     for(obj of EntriesToSave){
         var savedEntry = JSON.parse(JSON.stringify(obj));
-        await db.AddItemToChargingStationTable(convert2dynamoformat(savedEntry)).then(function(res){
+        await db.AddItemToChargingStationTable(convert2mongoformat(savedEntry)).then(function(res){
             // console.log(num3 + ' Saved DB' + res);
             num3++;  
         });

@@ -16,28 +16,28 @@ function isModified(oldEntry, newEntry){
     }
     return IsModified;
 }
-function convert2dynamoformat(entry){
+function convert2mongoformat(entry){
     var restrictionsremark = (entry.RestrictionsRemark)?entry.RestrictionsRemark : "None";
     var connectortype = (entry.ConnectorType)?entry.ConnectorType : "None";
     var vehicletype = (entry.vehicletype)?entry.vehicletype : "None";
     var chargingcapability = (entry.chargingcapability)?entry.chargingcapability : "None";
     var identificationtype = (entry.identificationtype)?entry.identificationtype : "None";
     var item = {
-        "oid": {S: entry.oid},
-        "created_at": {N: entry.created_at.toString()},
-        "id": {S: entry.id},
-        "siteid": {S: entry.siteid},
-        "name": {S: entry.name},
-        "address": {S: entry.address},
-        "city": {S: entry.city},
-        "lat": {N: entry.lat.toString()},
-        "lng": {N: entry.lng.toString()},
-        "restrictionsremark": {S: restrictionsremark},
-        "connectortype": {S: connectortype},
-        "vehicletype": {S: vehicletype},
-        "chargingcapability": {S: chargingcapability},
-        "identificationtype": {S: identificationtype},
-        "status": {S: entry.status},
+        oid: entry.oid.toString(),
+        created_at: entry.created_at.toString(),
+        id: entry.id.toString(),
+        siteid: entry.siteid.toString(),
+        name: entry.name.toString(),
+        address: entry.address.toString(),
+        city: entry.city.toString(),
+        lat:entry.lat.toString(),
+        lng: entry.lng.toString(),
+        restrictionsremark: restrictionsremark.toString(),
+        connectortype: connectortype.toString(),
+        vehicletype: vehicletype.toString(),
+        chargingcapability: chargingcapability.toString(),
+        identificationtype: identificationtype.toString(),
+        status: entry.status.toString()
         
         // "chargingpoints": {S: entry.chargingpoints.map((r) => JSON.stringify(r)).toString()}    
     }
@@ -181,7 +181,7 @@ async function UpdateModifiedEntries(body){
     var num3 = 0;
     for(obj of EntriesToSave){
         var savedEntry = JSON.parse(JSON.stringify(obj));
-        await db.AddItemToChargingStationTable(convert2dynamoformat(savedEntry)).then(function(res){
+        await db.AddItemToChargingStationTable(convert2mongoformat(savedEntry)).then(function(res){
             // console.log(num3 + ' Saved DB' + res);
             num3++;  
         });

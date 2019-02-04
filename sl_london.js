@@ -17,34 +17,34 @@ function isModified(oldEntry, newEntry){
 
 
 
-function convert2dynamoformat(entry){
+function convert2mongoformat(entry){
     var scheduled_at = (entry.scheduled_at)?entry.scheduled_at : "None";
     var displayed_comment = (entry.displayed_comment)?entry.displayed_comment : "None";
     var pricing_zone = (entry.pricing_zone)?entry.pricing_zone : "None";
     var kind = (entry.kind)?entry.kind : "None";
     var client_category = (entry.client_category)?entry.client_category : "None";
     var item = {
-        "oid": {S: entry.oid},
-        "created_at": {N: entry.created_at.toString()},
-        "id": {S: entry.id},
-        "siteid": {S: entry.siteid},
-        "sitestatus": {S: entry.sitestatus},
-        "name": {S: entry.name},
-        "address": {S: entry.address},
-        "city": {S: entry.city},
-        "lat": {N: entry.lat.toString()},
-        "lng": {N: entry.lng.toString()},
-        "scheduled_at": {S: scheduled_at},
-        "charging_status": {S: entry.charging_status},
-        "subscription_status": {S: entry.subscription_status},
-        "sitekind": {S: entry.sitekind},
-        "displayed_comment": {S: displayed_comment},
-        "pricing_zone": {S: pricing_zone},
-        "kind": {S: kind},
-        "communicative": {S: entry.communicative.toString()},
-        "bookable": {S: entry.bookable.toString()},
-        "client_category": {S: client_category},
-        "availability": {S: JSON.stringify(entry.availability)},
+        oid: entry.oid.toString(),
+        created_at: entry.created_at.toString(),
+        id: entry.id.toString(),
+        siteid: entry.siteid.toString(),
+        sitestatus: entry.sitestatus.toString(),
+        name:  entry.name.toString(),
+        address:  entry.address,
+        city:  entry.city.toString(),
+        lat: entry.lat.toString(),
+        lng:  entry.lng.toString(),
+        scheduled_at:  scheduled_at.toString(),
+        charging_status:  entry.charging_status.toString(),
+        subscription_status:  entry.subscription_status.toString(),
+        sitekind:  entry.sitekind.toString(),
+        displayed_comment:  displayed_comment.toString(),
+        pricing_zone:  pricing_zone.toString(),
+        kind: kind.toString(),
+        communicative: entry.communicative.toString(),
+        bookable:  entry.bookable.toString(),
+        client_category:  client_category.toString(),
+        availability:  JSON.stringify(entry.availability)
     }
     return item;
 }
@@ -182,7 +182,7 @@ async function UpdateModifiedEntries(body){
     var num3 = 0;
     for(obj of EntriesToSave){
         var savedEntry = JSON.parse(JSON.stringify(obj));
-        await db.AddItemToChargingStationTable(convert2dynamoformat(savedEntry)).then(function(res){
+        await db.AddItemToChargingStationTable(convert2mongoformat(savedEntry)).then(function(res){
             // console.log(num3 + ' Saved DB' + res);
             num3++;  
         });

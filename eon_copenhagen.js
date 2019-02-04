@@ -14,7 +14,7 @@ function isModified(oldEntry, newEntry){
     }
     return IsModified;
 }
-function convert2dynamoformat(entry){
+function convert2mongoformat(entry){
     var item = {
         oid: entry.oid.toString(),
         created_at: entry.created_at.toString(),
@@ -122,7 +122,7 @@ async function UpdateModifiedEntries(body){
     var num3 = 0;
     for(obj of EntriesToSave){
         var savedEntry = JSON.parse(JSON.stringify(obj));
-        await db.AddItemToChargingStationTable(convert2dynamoformat(savedEntry)).then(function(res){
+        await db.AddItemToChargingStationTable(convert2mongoformat(savedEntry)).then(function(res){
             // console.log(num3 + ' Saved DB' + res);
             num3++;  
         });

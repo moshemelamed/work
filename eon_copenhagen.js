@@ -16,19 +16,19 @@ function isModified(oldEntry, newEntry){
 }
 function convert2dynamoformat(entry){
     var item = {
-        "oid": {S: entry.oid},
-        "created_at": {N: entry.created_at.toString()},
-        "id": {S: entry.id},
-        "siteid": {S: entry.siteid},
-        "sitestatus": {S: entry.sitestatus},
-        "name": {S: entry.name},
-        "address": {S: entry.address},
-        "city": {S: entry.city},
-        "lat": {N: entry.lat.toString()},
-        "lng": {N: entry.lng.toString()},
-        "status": {S: entry.status}
+        oid: entry.oid.toString(),
+        created_at: entry.created_at.toString(),
+        id: entry.id.toString(),
+        siteid: entry.siteid.toString(),
+        sitestatus: entry.sitestatus.toString(),
+        name: entry.name.toString(),
+        address: entry.address.toString(),
+        city: entry.city.toString(),
+        lat: entry.lat.toString(),
+        lng: entry.lng.toString(),
+        status: entry.status.toString()
         // "chargingpoints": {S: entry.chargingpoints.map((r) => JSON.stringify(r)).toString()}    
-    }
+    };
     return item;
 }
 

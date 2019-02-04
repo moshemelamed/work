@@ -15,12 +15,12 @@ function main(){
         console.log('DB initialized, start Service ' + result);
         var data = eon.GetRealTimeData();
         setInterval(eon.GetRealTimeData, eon_scheduling);
-        var sln_data = sln.GetRealTimeData();
-        setInterval(sln.GetRealTimeData, sln_scheduling);
-        var ams_data = ams.GetRealTimeData();
-        setInterval(ams.GetRealTimeData, ams_scheduling);
-        var polar_data = polar.GetRealTimeData();
-        setInterval(polar.GetRealTimeData, polar_scheduling);
+        // var sln_data = sln.GetRealTimeData();
+        // setInterval(sln.GetRealTimeData, sln_scheduling);
+        // var ams_data = ams.GetRealTimeData();
+        // setInterval(ams.GetRealTimeData, ams_scheduling);
+        // var polar_data = polar.GetRealTimeData();
+        // setInterval(polar.GetRealTimeData, polar_scheduling);
     }, function(err){
         console.log('err ' + err);
     });

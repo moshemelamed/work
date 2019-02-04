@@ -9,25 +9,20 @@ AWS.config.update({ region: 'eu-west-2' });
 //Load mongoose for working with mongodb
 const mongoose = require('mongoose');
 //Loading the Schema for mongoose
-const Schema = mongoose.Schema;
+mongoose.Promise = global.Promise;
+var Schema = mongoose.Schema;
+var db = mongoose.connection;
+var ChargingdbSchema = new Schema;
 //Naming the Schema
-const ChargingdbSchema = new Schema
 //Connection to mongodb
-var connected = mongoose.connect('mongodb://ec2-3-8-115-8.eu-west-2.compute.amazonaws.com:27017/ChargingdbSchema', { useNewUrlParser: true });
 
-mongoose.connection.once('open', function () {
-    console.log('Connection has been made');
 
-}).on('error', function (error) {
-    console.log('Connection error', error)
-});
+// var READ_CAPACITY = 5;
+// var WRITE_CAPACITY = 5;
 
-var READ_CAPACITY = 5;
-var WRITE_CAPACITY = 5;
-
-var read_sem = require('semaphore')(READ_CAPACITY - 1);
-var write_sem = require('semaphore')(WRITE_CAPACITY - 1);
-var red_int = 0;
+// var read_sem = require('semaphore')(READ_CAPACITY - 1);
+// var write_sem = require('semaphore')(WRITE_CAPACITY - 1);
+// var red_int = 0;
 // var AsyncLock = require('async-lock');
 // var lock = new AsyncLock();
 
@@ -36,166 +31,124 @@ var red_int = 0;
 //   else     console.log(data);           // successful response
 
 // });
-var db = mongoose.connection;
 
-
-function initDB(params) {
-    return new Promise(function (resolve, reject) {
-        connected.db.collectionNames(function (err, names) {
-            //dynamodb.createTable(params, function(err, data) {
-            const ChargingdbSchemaDB = new mongoose.Schema({ params });//need to acceses err and data?
-            ChargingdbDB = mongoose.model('testMongoose', ChargingdbSchemaDB);
-            if (err) {
-                console.log(JSON.stringify(err), err.stack); // an error occurred
-                if (err.name == 'ResourceInUseException') {
-                    console.log('Table ' + params.TableName + ' already allocated');
-                    resolve(1);
-                }
-                else {
-                    reject(err);
-                }
-            }
-            else {
-                console.log(names);           // successful response
-                resolve(0);
-            };
-        });
-    });
-
+function connectToMongo() {
+    connected = mongoose.connect('mongodb://ec2-3-8-115-8.eu-west-2.compute.amazonaws.com:27017/ChargingdbSchema', { useNewUrlParser: true });
 }
 
 exports.CreateChargingStationsTable = function () {
-    // function CreateChargingStationsTable (){
-    var ret = false;
-    var params = {
-        //     AttributeDefinitions: [ 
-        //         {
-        //             AttributeName: "created_at", 
-        //             AttributeType: "N"
-        //         },
-        //         {
-        //             AttributeName: "id", 
-        //             AttributeType: "S"
-        //         }
-        //     ], 
-        //     KeySchema: [
-        //         {
-        //             AttributeName: "id", 
-        //             KeyType: "HASH"
-        //         }, 
-        //         {
-        //             AttributeName: "created_at", 
-        //             KeyType: "RANGE"
-        //         }
-        //     ], 
-        //     ProvisionedThroughput: {
-        //         ReadCapacityUnits: READ_CAPACITY, 
-        //         WriteCapacityUnits: WRITE_CAPACITY
-        //     }, 
-        //     TableName: "ChargingStations"
-        //    };
-        oid: String,
-        created_at: String,
-        id: String,
-        siteid: String,
-        address: String,
-        city: String,
-        lat: String,
-        lng: String,
-        type: String,
-        name: String,
-        cost: String,
-        kw: String,
-        rating: String,
-        text: String,
-        status: String
-    }
-    //    console.log('Right before !!!'); // an error occurred
+    var params = [{ name: 'momo' },
+    {
+        oid: 'moshe',
+        created_at: 'String',
+        id: 'String',
+        siteid: 'String',
+        address: 'String',
+        city: 'String',
+        lat: 'String',
+        lng: 'String',
+        type: 'String',
+        name: 'String',
+        cost: 'String',
+        kw: 'String',
+        rating: 'String',
+        text: 'String',
+        status: 'String'
+    },
+    { name: 'new' }
+    ];
     return initDB(params);
 }
 
+function initDB(params) {
+    return new Promise(function (resolve, reject) {
+        connectToMongo();
+        db.on('error', console.error.bind(console, 'connection error:'));
+        db.once('open', function () {
+            console.log('Connection has been made');
+            var ChargingdbSchemaDB = new mongoose.Schema({
+                oid: String,
+                created_at: String,
+                id: String,
+                siteid: String,
+                address: String,
+                city: String,
+                lat: String,
+                lng: String,
+                type: String,
+                name: String,
+                cost: String,
+                kw: String,
+                rating: String,
+                text: String,
+                status: String,
+                TableName: String
+            });
+            ChargingdbDB = mongoose.model('testMongoose', ChargingdbSchemaDB);
+            //description on schema
+            console.log(ChargingdbDB.schema.obj);
 
 
+            ChargingdbDB.collection.insertMany(params, function (err, docs) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    console.log("Multiple documents inserted to Collection");
+                }
+            });
+            resolve(1);
+        });
 
-
-exports.PrintTable = function (TableName) {
-    // function PrintTable(TableName){
-    var params = {
-        TableName: TableName
-    };
-    dynamodb.describeTable(params, function (err, data) {
-        if (err)
-            console.log(err, err.stack); // an error occurred
-        else
-            console.log(data);           // successful response
     });
 }
 
-// exports.AddItemToChargingStationTable = function(item){ 
-// // function AddItemToChargingStationTable(item){
-//     write_sem.take(function(){
-//         var params = {
-//             Item: item,
-//             ReturnValues: 'ALL_OLD',
-//             TableName: "ChargingStations",
-//             ReturnConsumedCapacity: 'INDEXES'
-//         }
-//         dynamodb.putItem(params, function(err, data) {
-//             if (err) {
-//                 console.log(JSON.stringify(err), err.stack); // an error occurred
-//                 write_sem.leave();
-//             }
-//             else {
-//                 console.log('Added to DB ' + item.id.S );           // successful response
-//                 write_sem.leave();
-//             }
+
+exports.PrintTable = function (TableName) {
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function () {
+        console.log(ChargingdbDB);
+    });
+}
+
+// function queryItem(params){
+//     return new Promise(function(resolve, reject){
+//         read_sem.take(function(){
+//             red_int = red_int + 1;
+//             console.log('query ' + params.ExpressionAttributeValues[':id'].S + ' ' +red_int);
+
+//             dynamodb.query(params, function(err, data) {
+//                 if (err){
+//                     //throw err;
+//                     console.log('Query Error ' + JSON.stringify(err));
+//                     reject(err);
+//                     red_int = red_int - 1;
+//                     read_sem.leave();
+//                 }
+//                 else {     
+//                     // console.log(data);           // successful response
+//                     //return data;
+//                     resolve(data);
+//                     if(!data){
+//                         console.log('Empty result!');
+//                     }
+//                     else{
+//                     red_int = red_int - 1;
+//                     read_sem.leave();
+//                     }
+//                 }
+//             });
 //         });
 //     });
 // }
 
 
-function queryItem(params) {
-    return new Promise(function (resolve, reject) {
-        read_sem.take(function () {
-            red_int = red_int + 1;
-            console.log('query ' + params.ExpressionAttributeValues[':id'].S + ' ' + red_int);
-
-            dynamodb.query(params, function (err, data) {
-                if (err) {
-                    //throw err;
-                    console.log('Query Error ' + JSON.stringify(err));
-                    reject(err);
-                    red_int = red_int - 1;
-                    read_sem.leave();
-                }
-                else {
-                    // console.log(data);           // successful response
-                    //return data;
-                    resolve(data);
-                    if (!data) {
-                        console.log('Empty result!');
-                    }
-                    else {
-                        red_int = red_int - 1;
-                        read_sem.leave();
-                    }
-                }
-            });
-        });
-    });
-}
-
-
 exports.GetLatestEntry = function (id) {
-
     var params = {
-        ExpressionAttributeValues: {
-            ':id': { S: id }
-        },
-        TableName: "ChargingStations",
-        KeyConditionExpression: "id = :id",
-        Limit: 1,
-        ScanIndexForward: false
+        'ExpressionAttributeValues': '{id: { S: %s }}', id,
+        'TableName': "ChargingStations",
+        'KeyConditionExpression': '%s', id,//
+        'Limit': '1',
+        'ScanIndexForward': false
     }
     return queryItem(params);
 
@@ -230,44 +183,23 @@ exports.SetMapSafe = function (mapid, id, entry) {
 }
 
 exports.AddItemToChargingStationTable = function (item) {
-    var params = {
-        Item: JSON.parse(JSON.stringify(item)),
-        ReturnValues: 'ALL_OLD',
-        TableName: "ChargingStations",
-        ReturnConsumedCapacity: 'INDEXES'
-    }
+
     return new Promise(function (resolve, reject) {
-        dynamodb.putItem(params, function (err, data) {
+        var params = JSON.parse(JSON.stringify(item));
+        //need to use panda and jason load
+        //dynamodb.putItem(params, function (err, data) {
+        ChargingdbDB.collection.insertOne(params, function (err, docs) {
             if (err) {
-                console.log(JSON.stringify(err), err.stack); // an error occurred
-                reject(err);
-            }
-            else {
-                // console.log('Added to DB ' + JSON.stringify(data) );           // successful response
-                resolve(data);
+                return console.error(err);
+            } else {
+                console.log("one documents inserted to Collection");
             }
         });
+        resolve(1);
     });
 }
 
 
-    // // function AddItemToChargingStationTable(item){
-    //     write_sem.take(function(){
-    //         var params = {
-    //             Item: item,
-    //             ReturnValues: 'ALL_OLD',
-    //             TableName: "ChargingStations",
-    //             ReturnConsumedCapacity: 'INDEXES'
-    //         }
-    //         dynamodb.putItem(params, function(err, data) {
-    //             if (err) {
-    //                 console.log(JSON.stringify(err), err.stack); // an error occurred
-    //                 write_sem.leave();
-    //             }
-    //             else {
-    //                 console.log('Added to DB ' + item.id.S );           // successful response
-    //                 write_sem.leave();
-    //             }
-    //         });
-    //     });
-    // }
+
+
+

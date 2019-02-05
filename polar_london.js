@@ -2,22 +2,18 @@ var request = require('request');
 var prevSpotsMap = new Map();
 var db = require('./database_if');
 
-// Retrieve the most updated status from the database
-function GetLastModified(){
-
-}
 
 // Compare two entries and check if status has changed.
-function isModified(oldEntry, newEntry){
-    var IsModified = false;
-    if(oldEntry.status != newEntry.status){
-        IsModified = true;
-    }
-    if(oldEntry.sitestatus != newEntry.sitestatus){
-        IsModified = true;
-    }
-    return IsModified;
-}
+// function isModified(oldEntry, newEntry){
+//     var IsModified = false;
+//     if(oldEntry.status != newEntry.status){
+//         IsModified = true;
+//     }
+//     if(oldEntry.sitestatus != newEntry.sitestatus){
+//         IsModified = true;
+//     }
+//     return IsModified;
+// }
 function convert2mongoformat(entry){
     
     var name = (entry.name)?entry.name : "None";
@@ -53,45 +49,45 @@ function convert2mongoformat(entry){
 }
 
 
-function dynamo2normal(item){
-    var entry = {
-       oid: item.oid.S,
-       created_at: parseInt(item.created_at.S),
-       id: item.id.S,
-       siteid:  item.siteid.S,
-       address:  item.address.S,
-       city:  item.city.S,
-       lat: parseInt(item.lat),
-       lng: parseInt(item.lng),
-       type:  item.type.S,
-       name:  item.name.S,
-       cost:  item.cost.S,
-       kw:  item.kw.S,
-       rating:  item.rating.S,
-       text:  item.text.S,
-       status:  item.status.S,
+// function dynamo2normal(item){
+//     var entry = {
+//        oid: item.oid.S,
+//        created_at: parseInt(item.created_at.S),
+//        id: item.id.S,
+//        siteid:  item.siteid.S,
+//        address:  item.address.S,
+//        city:  item.city.S,
+//        lat: parseInt(item.lat),
+//        lng: parseInt(item.lng),
+//        type:  item.type.S,
+//        name:  item.name.S,
+//        cost:  item.cost.S,
+//        kw:  item.kw.S,
+//        rating:  item.rating.S,
+//        text:  item.text.S,
+//        status:  item.status.S,
        
-    }
-    return entry;
-}
+//     }
+//     return entry;
+// }
 
 
-function convertFromdynamoformat(item){
-     var entry = {
-        oid: item.oid.S,
-        created_at: parseInt(item.created_at.S),
-        id: item.id.S,
-        siteid: item.siteid.S,
-        sitestatus: item.sitestatus.S,
-        name: item.name.S,
-        address: item.address.S,
-        city: item.city.S,
-        lat: parseFload(item.lat.N),
-        lng: parseFload(item.lng.N),
-        status: item.status.S
-     }
-     return entry;
-}
+// function convertFromdynamoformat(item){
+//      var entry = {
+//         oid: item.oid.S,
+//         created_at: parseInt(item.created_at.S),
+//         id: item.id.S,
+//         siteid: item.siteid.S,
+//         sitestatus: item.sitestatus.S,
+//         name: item.name.S,
+//         address: item.address.S,
+//         city: item.city.S,
+//         lat: parseFload(item.lat.N),
+//         lng: parseFload(item.lng.N),
+//         status: item.status.S
+//      }
+//      return entry;
+// }
 
 // function getPrevEntry(id){
 //     return new Promise(function(resolve,reject){
@@ -114,32 +110,32 @@ function convertFromdynamoformat(item){
 //     });
 // }
 
-function getPrevEntry(id){
-    return new Promise(function(resolve,reject){
-        var entry = prevSpotsMap.get(id);
-        if(!entry)
-        {
-            // Get the last entry from the DB
-            var getlastentry = db.GetLatestEntry(id);
-            getlastentry.then(function(result){
-                //entry = result;
-                if(result.Count > 0){
-                    resolve(dynamo2normal(result.Items[0]));
-                }
-                else{
-                    resolve(0);
-                }
+// function getPrevEntry(id){
+//     return new Promise(function(resolve,reject){
+//         var entry = prevSpotsMap.get(id);
+//         if(!entry)
+//         {
+//             // Get the last entry from the DB
+//             var getlastentry = db.GetLatestEntry(id);
+//             getlastentry.then(function(result){
+//                 //entry = result;
+//                 if(result.Count > 0){
+//                     resolve(dynamo2normal(result.Items[0]));
+//                 }
+//                 else{
+//                     resolve(0);
+//                 }
         
-            }, function(err){
-                console.log('err ' + JSON.stringify(err));
-                reject(err);
-            });
-        }else{
-            // console.log(JSON.stringify(entry));
-            resolve(entry);
-        }
-    });
-}
+//             }, function(err){
+//                 console.log('err ' + JSON.stringify(err));
+//                 reject(err);
+//             });
+//         }else{
+//             // console.log(JSON.stringify(entry));
+//             resolve(entry);
+//         }
+//     });
+// }
 
 
 // // compare the status of the entries with the previous and extract only those that have changed

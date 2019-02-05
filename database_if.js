@@ -16,26 +16,7 @@ function connectToMongo() {
 }
 
 exports.CreateChargingStationsTable = function () {
-    var params = [{ name: 'first insert' },
-    {
-        oid: 'String',
-        created_at: 'String',
-        id: 'String',
-        siteid: 'String',
-        address: 'String',
-        city: 'String',
-        lat: 'String',
-        lng: 'String',
-        type: 'String',
-        name: 'String',
-        cost: 'String',
-        kw: 'String',
-        rating: 'String',
-        text: 'String',
-        status: 'String'
-    },
-    { name: 'first insert' }
-    ];
+    var params = { name: 'first insert' };
     return initDB(params);
 }
 
@@ -86,11 +67,11 @@ function initDB(params) {
             //console.log(ChargingdbDB.schema.obj);
 
 
-            ChargingdbDB.collection.insertMany(params, function (err, docs) {
+            ChargingdbDB.collection.insertOne(params, function (err, docs) {
                 if (err) {
                     return console.error(err);
                 } else {
-                    console.log("Multiple documents inserted to Collection");
+                    console.log("first insertion to db");
                 }
             });
             resolve(1);
@@ -98,15 +79,17 @@ function initDB(params) {
 
     });
 }
+ 
+//mongodb fonction for describing the schema
+// exports.PrintTable = function (TableName) {
+//     db.on('error', console.error.bind(console, 'connection error:'));
+//     db.once('open', function () {
+//         console.log(ChargingdbDB);
+//     });
+// }
 
 
-exports.PrintTable = function (TableName) {
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function () {
-        console.log(ChargingdbDB);
-    });
-}
-
+//dynamodb function...
 // function queryItem(params){
 //     return new Promise(function(resolve, reject){
 //         read_sem.take(function(){
@@ -139,24 +122,24 @@ exports.PrintTable = function (TableName) {
 // }
 
 
-exports.GetLatestEntry = function (id) {
-    var params = {
-        'ExpressionAttributeValues': '{id: { S: %s }}', id,
-        'TableName': "ChargingStations",
-        'KeyConditionExpression': '%s', id,//
-        'Limit': '1',
-        'ScanIndexForward': false
-    }
-    return queryItem(params);
+// exports.GetLatestEntry = function (id) {
+//     var params = {
+//         'ExpressionAttributeValues': '{id: { S: %s }}', id,
+//         'TableName': "ChargingStations",
+//         'KeyConditionExpression': '%s', id,//
+//         'Limit': '1',
+//         'ScanIndexForward': false
+//     }
+//     return queryItem(params);
 
-    // var query1 =  queryItem(params);
-    // query1.then(function(result){
-    //     return result;
-    // }, function(err){
-    //     console.log(JSON.stringify(err));
-    //     throw err;
-    // });
-}
+//     // var query1 =  queryItem(params);
+//     // query1.then(function(result){
+//     //     return result;
+//     // }, function(err){
+//     //     console.log(JSON.stringify(err));
+//     //     throw err;
+//     // });
+// }
 
 
 
@@ -180,7 +163,7 @@ exports.SetMapSafe = function (mapid, id, entry) {
 }
 
 exports.AddItemToChargingStationTable = function (item) {
-    console.log(item)
+    //console.log(item)
     return new Promise(function (resolve, reject) {
         var params = JSON.parse(JSON.stringify(item));
         //need to use panda and jason load
@@ -188,9 +171,10 @@ exports.AddItemToChargingStationTable = function (item) {
         ChargingdbDB.collection.insertOne(params, function (err, docs) {
             if (err) {
                 return console.error(err);
-            } else {
-                console.log("one documents inserted to Collection");
-            }
+            } 
+            // else {
+            //     console.log("one documents inserted to Collection");
+            // }
         });
         resolve(1);
     });

@@ -13,8 +13,8 @@ function main(){
     var initialized = db.CreateChargingStationsTable();
     initialized.then(function(result){
         console.log('DB initialized, start Service ' + result);
-        // var data = eon.GetRealTimeData();
-        // setInterval(eon.GetRealTimeData, eon_scheduling);
+        var data = eon.GetRealTimeData();
+        setInterval(eon.GetRealTimeData, eon_scheduling);
         var sln_data = sln.GetRealTimeData();
         setInterval(sln.GetRealTimeData, sln_scheduling);
         var ams_data = ams.GetRealTimeData();

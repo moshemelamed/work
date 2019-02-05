@@ -27,61 +27,60 @@ function convert2mongoformat(entry){
         lat: entry.lat.toString(),
         lng: entry.lng.toString(),
         status: entry.status.toString()
-        // "chargingpoints": {S: entry.chargingpoints.map((r) => JSON.stringify(r)).toString()}    
     };
     return item;
 }
 
-function dynamo2normal(item){
-    var entry = {
-       oid: item.oid.S,
-       created_at: parseInt(item.created_at.S),
-       id: item.id.S,
-       siteid:  item.siteid.S,
-       sitestatus: item.sitestatus.S,
-       name:  item.name.S,
-       address:  item.address.S,
-       city:  item.city.S,
-       lat: parseInt(item.lat),
-       lng: parseInt(item.lng),
-       status:  item.status.S,
+// function dynamo2normal(item){
+//     var entry = {
+//        oid: item.oid.S,
+//        created_at: parseInt(item.created_at.S),
+//        id: item.id.S,
+//        siteid:  item.siteid.S,
+//        sitestatus: item.sitestatus.S,
+//        name:  item.name.S,
+//        address:  item.address.S,
+//        city:  item.city.S,
+//        lat: parseInt(item.lat),
+//        lng: parseInt(item.lng),
+//        status:  item.status.S,
        
-    }
-    return entry;
-}
+//     }
+//     return entry;
+// }
 
 
 
-function convertFromdynamoformat(item){
-     var entry = {
-        oid: item.oid.S,
-        created_at: parseInt(item.created_at.S),
-        id: item.id.S,
-        siteid: item.siteid.S,
-        sitestatus: item.sitestatus.S,
-        name: item.name.S,
-        address: item.address.S,
-        city: item.city.S,
-        lat: parseFload(item.lat.N),
-        lng: parseFload(item.lng.N),
-        status: item.status.S
-     }
-     return entry;
-}
+// function convertFromdynamoformat(item){
+//      var entry = {
+//         oid: item.oid.S,
+//         created_at: parseInt(item.created_at.S),
+//         id: item.id.S,
+//         siteid: item.siteid.S,
+//         sitestatus: item.sitestatus.S,
+//         name: item.name.S,
+//         address: item.address.S,
+//         city: item.city.S,
+//         lat: parseFload(item.lat.N),
+//         lng: parseFload(item.lng.N),
+//         status: item.status.S
+//      }
+//      return entry;
+// }
 
 
 
-function GetEntry(id){
-    return new Promise(function(resolve,reject){
-        resolve = prevSpotsMap.get(id);
-    });
-}
+// function GetEntry(id){
+//     return new Promise(function(resolve,reject){
+//         resolve = prevSpotsMap.get(id);
+//     });
+// }
 
-function SetEntry(id,entry){
-    return new Promise(function(resolve,reject){
-        resolve = prevSpotsMap.set(id,entry)
-    });
-}
+// function SetEntry(id,entry){
+//     return new Promise(function(resolve,reject){
+//         resolve = prevSpotsMap.set(id,entry)
+//     });
+// }
 
 // compare the status of the entries with the previous and extract only those that have changed
 async function UpdateModifiedEntries(body){

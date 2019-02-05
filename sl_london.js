@@ -51,60 +51,60 @@ function convert2mongoformat(entry){
 
 
 
-function dynamo2normal(item){
-     var entry = {
-        oid: item.oid.S,
-        created_at: parseInt(item.created_at.S),
-        id: item.id.S,
-        siteid:  item.siteid.S,
-        sitestatus:  item.sitestatus.S,
-        name:  item.name.S,
-        address:  item.address.S,
-        city:  item.city.S,
-        lat: parseInt(item.lat),
-        lng: parseInt(item.lng),
-        scheduled_at:  item.scheduled_at.S,
-        charging_status:  item.charging_status.S,
-        subscription_status:  item.subscription_status.S,
-        sitekind:  item.sitekind.S,
-        displayed_comment:  item.displayed_comment.S,
-        pricing_zone:  item.pricing_zone.S,
-        kind:  item.kind.S,
-        communicative:  item.communicative.S,
-        bookable:  item.bookable.S,
-        client_category:  item.client_category.S,
-        availability:  JSON.parse(item.availability.S),
+// function dynamo2normal(item){
+//      var entry = {
+//         oid: item.oid.S,
+//         created_at: parseInt(item.created_at.S),
+//         id: item.id.S,
+//         siteid:  item.siteid.S,
+//         sitestatus:  item.sitestatus.S,
+//         name:  item.name.S,
+//         address:  item.address.S,
+//         city:  item.city.S,
+//         lat: parseInt(item.lat),
+//         lng: parseInt(item.lng),
+//         scheduled_at:  item.scheduled_at.S,
+//         charging_status:  item.charging_status.S,
+//         subscription_status:  item.subscription_status.S,
+//         sitekind:  item.sitekind.S,
+//         displayed_comment:  item.displayed_comment.S,
+//         pricing_zone:  item.pricing_zone.S,
+//         kind:  item.kind.S,
+//         communicative:  item.communicative.S,
+//         bookable:  item.bookable.S,
+//         client_category:  item.client_category.S,
+//         availability:  JSON.parse(item.availability.S),
         
-     }
-     return entry;
-}
+//      }
+//      return entry;
+// }
 
-function getPrevEntry(id){
-    return new Promise(function(resolve,reject){
-        var entry = prevSpotsMap.get(id);
-        if(!entry)
-        {
-            // Get the last entry from the DB
-            var getlastentry = db.GetLatestEntry(id);
-            getlastentry.then(function(result){
-                //entry = result;
-                if(result.Count > 0){
-                    resolve(dynamo2normal(result.Items[0]));
-                }
-                else{
-                    resolve(0);
-                }
+// function getPrevEntry(id){
+//     return new Promise(function(resolve,reject){
+//         var entry = prevSpotsMap.get(id);
+//         if(!entry)
+//         {
+//             // Get the last entry from the DB
+//             var getlastentry = db.GetLatestEntry(id);
+//             getlastentry.then(function(result){
+//                 //entry = result;
+//                 if(result.Count > 0){
+//                     resolve(dynamo2normal(result.Items[0]));
+//                 }
+//                 else{
+//                     resolve(0);
+//                 }
         
-            }, function(err){
-                console.log('err ' + JSON.stringify(err));
-                reject(err);
-            });
-        }else{
-            // console.log(JSON.stringify(entry));
-            resolve(entry);
-        }
-    });
-}
+//             }, function(err){
+//                 console.log('err ' + JSON.stringify(err));
+//                 reject(err);
+//             });
+//         }else{
+//             // console.log(JSON.stringify(entry));
+//             resolve(entry);
+//         }
+//     });
+// }
 
 // compare the status of the entries with the previous and extract only those that have changed
 // function UpdateModifiedEntries(body){

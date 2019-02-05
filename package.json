@@ -15,11 +15,20 @@
     "mysql": "latest",
     "os": "latest",
     "request": "latest",
+    "mongoose": "latest",
     "semaphore": "^1.1.0"
   },
   "scripts": {
     "start": "node main.js"
   },
   "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moshemelamed/work.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moshemelamed/work/issues"
+  },
+  "homepage": "https://github.com/moshemelamed/work#readme",
   "description": ""
 }

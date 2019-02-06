@@ -140,7 +140,6 @@ function convert2mongoformat(entry){
 // }
 
 
-// compare the status of the entries with the previous and extract only those that have changed
 async function UpdateModifiedEntries(body){
     var EntriesToSave = [];
     // body.forEach(function(entry){

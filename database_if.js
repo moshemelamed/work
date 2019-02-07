@@ -9,10 +9,10 @@ mongoose.Promise = global.Promise;
 var Schema = mongoose.Schema;
 var db = mongoose.connection;
 //Naming the Schema
-var ChargingdbSchema = new Schema;
+var chargingstations = new Schema;
 
 function connectToMongo() {
-    connected = mongoose.connect('mongodb://ec2-3-8-115-8.eu-west-2.compute.amazonaws.com:27017/ChargingdbSchema', { useNewUrlParser: true });
+    connected = mongoose.connect('mongodb://ec2-3-8-115-8.eu-west-2.compute.amazonaws.com:27017/chargingstations', { useNewUrlParser: true });
 }
 
 exports.CreateChargingStationsTable = function () {
@@ -62,7 +62,7 @@ function initDB(params) {
                 client_category: String,
                 availability: String
             });
-            ChargingdbDB = mongoose.model('testMongoose', ChargingdbSchemaDB);
+            ChargingdbDB = mongoose.model('chargingstations', ChargingdbSchemaDB);
             //description of schema
             //console.log(ChargingdbDB.schema.obj);
 
